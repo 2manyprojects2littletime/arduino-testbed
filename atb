@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+
+/**
+ * Arduino Test Bed
+ * A utiliy that checks each digital and analog pin on common arduino
+ * types to ensure you have not fried your board.
+ *
+ * @author Jarred Kenny (jarred@jarredkenny.com)
+ *
+ */
+
+var colors = require('colors/safe');
+var arduino = require('./lib/arduino');
+var pins  = require('./lib/pins');
+
+var type = process.argv[2];
+
+if(type === undefined){
+  console.error("You must specify a board type.");
+  return;
+}
+
+else if(pins[type] === undefined){
+  console.error(type + " is not a supported board type.");
+  return;
+}
+
+for(var i = 0; i < pins[type].digital.length; i++){
+  arduino.addDigitalTest(pins[type].digital[i]);
+}
+
+for(var i = 0; i < pins[type].analog.length; i++){
+  arduino.addAnalogTest(pins[type].analog[i]);
+}
+
+arduino.init();
+
+arduino.onReady(function(board){
+
+  console.log(board);
+
+  /*arduino.runTests();
+  setInterval(function(){
+
+    if(arduino.testsComplete()){
+
+      if(arduino.validateDigital()){
+        console.log("Digital Pin Tests... " + colors.green("PASSED"));
+      }else{
+        console.log("Digital Pin Tests... " + colors.red("FAILED"));
+        console.log("The following pins have failed: " + arduino.getFailedDigitalPins());
+      }
+
+      if(arduino.validateAnalog()){
+        console.log("\nAnalog Pin Tests... " + colors.green("PASSED"));
+      }else{
+        console.log("\nAnalog Pin Tests... " + colors.red("FAILED"));
+        console.log("The following pins have failed: " + arduino.getFailedAnalogPins());
+      }
+
+      process.exit();
+    }
+    return;
+  }, 100);*/
+
+});

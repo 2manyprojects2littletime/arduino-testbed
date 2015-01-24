@@ -6,7 +6,9 @@
   "dependencies": {
     "johnny-five": "^0.8.38"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "colors": "^1.0.3"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
