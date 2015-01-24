@@ -5,6 +5,13 @@ const int numberOfTests = 1;
 testFunction tests[numberOfTests];
 
 int smokeTest() {
+  pinMode(12, OUTPUT);
+  digitalWrite(12, HIGH);
+  delay(500);
+  digitalWrite(12, LOW);
+  delay(500);
+  pinMode(12, INPUT);
+  delay(500);
   return 0;
 }
 
