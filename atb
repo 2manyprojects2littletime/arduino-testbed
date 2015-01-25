@@ -12,30 +12,30 @@
 var colors = require('colors/safe');
 var arduino = require('./lib/arduino');
 var pins  = require('./lib/pins');
+var argv = require('yargs').argv;
 
-var type = process.argv[2];
+if(argv.board === undefined){
+  console.log('You did not specify a board type. Will attempt to auto detect.');
+}
 
-if(type === undefined){
-  console.error("You must specify a board type.");
+else if(pins[argv.board] === undefined){
+  console.error(argv.board + " is not a supported board type.");
   return;
-}
-
-else if(pins[type] === undefined){
-  console.error(type + " is not a supported board type.");
-  return;
-}
-
-for(var i = 0; i < pins[type].digital.length; i++){
-  arduino.addDigitalTest(pins[type].digital[i]);
-}
-
-for(var i = 0; i < pins[type].analog.length; i++){
-  arduino.addAnalogTest(pins[type].analog[i]);
 }
 
 arduino.init();
 
+
 arduino.onReady(function(board){
+
+  for(var i = 0; i < pins[argv.board].digital.length; i++){
+    arduino.addDigitalTest(pins[argv.board].digital[i]);
+  }
+
+  for(var i = 0; i < pins[argv.board].analog.length; i++){
+    arduino.addAnalogTest(pins[argv.board].analog[i]);
+  }
+
 
   arduino.runTests();
   setInterval(function(){
@@ -44,16 +44,20 @@ arduino.onReady(function(board){
 
       if(arduino.validateDigital()){
         console.log("Digital Pin Tests... " + colors.green("PASSED"));
+        arduino.showSuccess();
       }else{
         console.log("Digital Pin Tests... " + colors.red("FAILED"));
         console.log("The following pins have failed: " + arduino.getFailedDigitalPins());
+        arduino.showFailure();
       }
 
       if(arduino.validateAnalog()){
-        console.log("\nAnalog Pin Tests... " + colors.green("PASSED"));
+        console.log("Analog Pin Tests.... " + colors.green("PASSED"));
+        arduino.showSuccess();
       }else{
-        console.log("\nAnalog Pin Tests... " + colors.red("FAILED"));
+        console.log("Analog Pin Tests.... " + colors.red("FAILED"));
         console.log("The following pins have failed: " + arduino.getFailedAnalogPins());
+        arduino.showFailure();
       }
 
       process.exit();
