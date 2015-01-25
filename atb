@@ -37,9 +37,7 @@ arduino.init();
 
 arduino.onReady(function(board){
 
-  console.log(board);
-
-  /*arduino.runTests();
+  arduino.runTests();
   setInterval(function(){
 
     if(arduino.testsComplete()){
@@ -61,6 +59,6 @@ arduino.onReady(function(board){
       process.exit();
     }
     return;
-  }, 100);*/
+  }, 100);
 
 });
